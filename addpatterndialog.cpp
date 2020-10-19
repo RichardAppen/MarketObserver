@@ -9,7 +9,15 @@ addPatternDialog::addPatternDialog(QWidget *parent, QString incomingPatternName)
 {
     ui->setupUi(this);
 
+    ui->patternNameLineEdit->setFocus();
+
+    // After a change in plans "indicator 2" field is no longer in use but will be kept for now
+    ui->indicator2lineEdit->setVisible(false);
+    ui->label_3->setVisible(false);
+
     if (incomingPatternName != nullptr) {
+        ui->patternNameLineEdit->setVisible(false);
+        ui->label_4->setVisible(false);
 
         QSqlQuery querry;
         querry.prepare("select * from patternstable where name='" + incomingPatternName + "' ");
@@ -19,7 +27,9 @@ addPatternDialog::addPatternDialog(QWidget *parent, QString incomingPatternName)
 
             while (querry.next()) {
                 ui->patternNameLineEdit->setText(querry.value(0).toString());
-                ui->indicator1LineEdit->setText(querry.value(1).toString());
+                this->incomingPatternName = querry.value(0).toString();
+                ui->descriptionTextEdit->setText(querry.value(1).toString());
+                // Indicator 2 field currently in need of work
                 ui->indicator2lineEdit->setText(querry.value(2).toString());
             }
 
@@ -42,16 +52,15 @@ addPatternDialog::~addPatternDialog()
 
 void addPatternDialog::on_finishNewPatternButton_clicked()
 {
-    QString patternName, indicator1, indicator2;
+    QString patternName, description, indicator2;
     patternName = ui->patternNameLineEdit->text();
-    indicator1 = ui->indicator1LineEdit->text();
+    description = ui->descriptionTextEdit->toPlainText();
     indicator2 = ui->indicator2lineEdit->text();
 
     // if we aren't editing
     if (incomingPatternName.compare("") == 0) {
-        qDebug() << "test 1.2.3... " << incomingPatternName;
         QSqlQuery querry;
-        querry.prepare("insert into patternstable (name,indicator1,indicator2) values ('" + patternName + "', '" + indicator1 + "','" + indicator2 + "')");
+        querry.prepare("insert into patternstable (name,description,indicator2) values ('" + patternName + "', '" + description + "','" + indicator2 + "')");
 
         if (querry.exec()) {
             qDebug() << "[Database] Inserted new pattern: " + patternName;
@@ -62,7 +71,7 @@ void addPatternDialog::on_finishNewPatternButton_clicked()
     } else {
 
         QSqlQuery querry;
-        querry.prepare("update patternstable set name = '" + patternName + "', indicator1 = '" + indicator1 + "', indicator2 = '" + indicator2 + "' where name = '" + patternName + "';");
+        querry.prepare("update patternstable set name = '" + patternName + "', description = '" + description + "', indicator2 = '" + indicator2 + "' where name = '" + patternName + "';");
 
         if (querry.exec()) {
             qDebug() << "[Database] Edited the pattern: " + patternName;

@@ -21,7 +21,7 @@ void addStocksDialog::on_addButton_clicked()
     stockName = ui->newSymbolLineEdit->text();
 
     QSqlQuery querry;
-    querry.prepare("create table if not exists " + incomingStockListName + "$" + stockName + "datatable (date varchar(20) primary key, pattern varchar(20), patternTriggered varchar(20), patternSuccess varchar(20), priceIncrease int, dateOfPricePeak int)");
+    querry.prepare("create table if not exists '" + incomingStockListName + "$" + stockName + "datatable' (date varchar(20) primary key, pattern varchar(20), patternTriggered varchar(20), patternSuccess varchar(20), priceAtTrigger int, priceAtPeak int, dateOfPricePeak int)");
 
     if (querry.exec()) {
         qDebug() << "[Database] specific datatable for: " + stockName + " under list: " + incomingStockListName + " created or already exist";

@@ -2,12 +2,14 @@
 #include "ui_addstocklistdialog.h"
 #include <mainwindow.h>
 #include <QMessageBox>
+#include <QSqlDatabase>
 
 addStockListDialog::addStockListDialog(QWidget *parent, QString incomingStockListName) :
     QDialog(parent),
     ui(new Ui::addStockListDialog)
 {
     ui->setupUi(this);
+    ui->stockListNameLineEdit->setFocus();
 
     if (incomingStockListName != nullptr) {
 
@@ -21,7 +23,11 @@ addStockListDialog::addStockListDialog(QWidget *parent, QString incomingStockLis
 
             while (querry.next()) {
                 ui->stockListNameLineEdit->setText(querry.value(0).toString());
-                ui->patternToUseLineEdit->setText(querry.value(1).toString());
+                //ui->patternToUseLineEdit->setText(querry.value(1).toString());
+                //ui->patternToUseLineEdit->setVisible(false);
+                ui->patternToUseComboBox->setVisible(false);
+                ui->label_2->setVisible(false);
+
             }
 
         } else {
@@ -29,8 +35,20 @@ addStockListDialog::addStockListDialog(QWidget *parent, QString incomingStockLis
             QMessageBox::critical(this, tr("error"), querry.lastError().text());
         }
 
+    } else {
+        //Load the patterns combo box
+        QSqlQueryModel * model = new QSqlQueryModel();
+        QSqlQuery querry2;
+        querry2.prepare("select name from patternstable");
+        if (querry2.exec()) {
 
+        } else {
+            QMessageBox::critical(this, tr("error: "), querry2.lastError().text());
+        }
+        model->setQuery(querry2);
+        ui->patternToUseComboBox->setModel(model);
     }
+
 }
 
 addStockListDialog::~addStockListDialog()
@@ -42,7 +60,8 @@ void addStockListDialog::on_finishNewStockListButton_clicked()
 {
     QString stockListName, patternToUse;
     stockListName = ui->stockListNameLineEdit->text();
-    patternToUse = ui->patternToUseLineEdit->text();
+    patternToUse = ui->patternToUseComboBox->currentText();
+
 
 
     // if we aren't editing
@@ -57,6 +76,7 @@ void addStockListDialog::on_finishNewStockListButton_clicked()
             qDebug() << "[Database] Failed to insert new stock list: " + stockListName;
             QMessageBox::critical(this, tr("error: "), tr("This stock list already exists!"));
         }
+
     } else {
 
         QSqlQuery querry;
@@ -69,6 +89,7 @@ void addStockListDialog::on_finishNewStockListButton_clicked()
             qDebug() << "[Database] Failed to edit the stock list: " + stockListName;
             QMessageBox::critical(this, tr("error: "), tr("Couldn't find the stock list you were trying to edit!"));
         }
+
     }
 
 

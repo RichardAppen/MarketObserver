@@ -2,6 +2,7 @@
 #define ADDSTOCKLISTDIALOG_H
 
 #include <QDialog>
+#include <QSqlDatabase>
 
 namespace Ui {
 class addStockListDialog;
@@ -15,6 +16,7 @@ public:
     explicit addStockListDialog(QWidget *parent = nullptr, QString incomingStockListName = "");
     ~addStockListDialog();
     QString incomingStockListName;
+    QSqlDatabase maindb;
 
 private slots:
     void on_finishNewStockListButton_clicked();

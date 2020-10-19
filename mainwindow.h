@@ -13,6 +13,8 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <vector>
+#include <QSet>
 
 
 
@@ -35,7 +37,11 @@ public:
     QModelIndex currStockListListViewIndex;
     QString currentStockListsPattern;
     QString currStockDataTable;
+    QString currStockName;
+    QString currStockListName;
     QString incomingDate;
+    QModelIndex indexToSave;
+    QSet<QString> patternsInUse;
 
 private slots:
     void on_patternsButton_clicked();
@@ -101,6 +107,30 @@ private slots:
     void on_addDataWithinStockButton_clicked();
 
     void on_dateStockLineEdit_textChanged(const QString &arg1);
+
+    void on_removeDataWithinStockButton_clicked();
+
+    void on_editStatsbutton_clicked();
+
+    void load_stockStats();
+
+    void on_returnToStatsButton_clicked();
+
+    void on_removeStockButton_clicked();
+
+    void on_otherAddNewStockButton_clicked();
+
+    void on_patternSuccessRadioButton_clicked();
+
+    void on_patternTriggeredRadioButton_clicked();
+
+    void on_dateStockLineEdit_editingFinished();
+
+    void on_specialDataTableAddDataButton_clicked();
+
+    void on_tradeTrackerButton_clicked();
+
+    void on_backTradeTrackerButton_clicked();
 
 private:
     Ui::MainWindow *ui;
