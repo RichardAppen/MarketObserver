@@ -582,7 +582,7 @@ void MainWindow::on_stocksBackButton_clicked()
 
 void MainWindow::on_otherAddNewStockButton_clicked()
 {
-    ui->stackedWidget_2->setCurrentIndex(1);
+    ui->stackedWidget_2->setCurrentIndex(0);
     QString stockListName = ui->stockListListView->model()->data(currStockListListViewIndex).toString();
 
     // Create new datatable for this new stock
@@ -628,7 +628,7 @@ void MainWindow::on_otherAddNewStockButton_clicked()
 
 void MainWindow::on_controlPageNewStockButton_clicked()
 {
-    ui->stackedWidget_2->setCurrentIndex(1);
+    ui->stackedWidget_2->setCurrentIndex(0);
     QString stockListName = ui->stockListListView->model()->data(currStockListListViewIndex).toString();
 
     // Create new datatable for this new stock
@@ -1512,7 +1512,7 @@ void MainWindow::load_stockStats() {
         QMessageBox::critical(this, tr("error: "), tr("error in 5"));
     }
 
-    ui->statsTextBrowser->append("The list uses pattern \"" + currentStockListsPattern + "\" defined as, " + patternDescription + "\"\n");
+    ui->statsTextBrowser->append("The list uses pattern \"" + currentStockListsPattern + "\" defined as, \"" + patternDescription + "\"\n");
 
     QSqlQuery * querry1 = new QSqlQuery(mainDataBase);
     querry1->prepare("select sum(patternTriggered) from '" + currStockDataTable + "'");
